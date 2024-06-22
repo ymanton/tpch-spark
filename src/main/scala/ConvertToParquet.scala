@@ -1,5 +1,7 @@
 package main.scala
 
+import org.apache.spark.sql.SparkSession
+
 object ConvertToParquet {
   def executeQueries(spark: SparkSession, schemaProvider: TpchSchemaProvider, parquetOutputDir: String): Unit = {
     schemaProvider.customer.write.parquet(parquetOutputDir + "/customer.parquet")
