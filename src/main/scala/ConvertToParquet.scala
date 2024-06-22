@@ -3,7 +3,7 @@ package main.scala
 import org.apache.spark.sql.SparkSession
 
 object ConvertToParquet {
-  def executeQueries(spark: SparkSession, schemaProvider: TpchSchemaProvider, parquetOutputDir: String): Unit = {
+  def convert(spark: SparkSession, schemaProvider: TpchSchemaProvider, parquetOutputDir: String): Unit = {
     schemaProvider.customer.write.parquet(parquetOutputDir + "/customer.parquet")
     schemaProvider.lineitem.write.parquet(parquetOutputDir + "/lineitem.parquet")
     schemaProvider.nation.write.parquet(parquetOutputDir + "/nation.parquet")
