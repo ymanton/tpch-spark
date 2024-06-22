@@ -7,7 +7,7 @@ object ConvertToParquet {
     schemaProvider.customer.write.parquet(parquetOutputDir + "/customer.parquet")
     schemaProvider.lineitem.write.parquet(parquetOutputDir + "/lineitem.parquet")
     schemaProvider.nation.write.parquet(parquetOutputDir + "/nation.parquet")
-    schemaProvider.orders.write.parquet(parquetOutputDir + "/orders.parquet")
+    schemaProvider.order.write.parquet(parquetOutputDir + "/order.parquet")
     schemaProvider.partsupp.write.parquet(parquetOutputDir + "/partsupp.parquet")
     schemaProvider.part.write.parquet(parquetOutputDir + "/part.parquet")
     schemaProvider.region.write.parquet(parquetOutputDir + "/region.parquet")
