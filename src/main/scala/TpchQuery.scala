@@ -95,7 +95,10 @@ object TpchQuery {
       .builder
       .appName("TPC-H v3.0.0 Spark")
       .getOrCreate()
-    val schemaProvider = new TpchSchemaProvider(spark, inputDataDir)
+    val schemaProvider = sys.env.getOrElse("TPCH_INPUT_DATA_FORMAT", "text") match {
+      case "parquet" => new TpchParquetSchemaProvider(spark, inputDataDir)
+      case "text" => new TpchSchemaProvider(spark, inputDataDir)
+    }
 
     // execute queries
     val executionTimes = executeQueries(spark, schemaProvider, queryNum, queryOutputDir)
