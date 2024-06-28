@@ -2,10 +2,10 @@ package main.scala
 
 import org.apache.spark.sql.SparkSession
 
-class TpchParquetSchemaProvider(spark: SparkSession, inputDir: String) extends TpchSchemaProvider(spark, inputDir) {
+class TpchParquetSchemaProvider(spark: SparkSession, inputDir: String) extends TpchSchemaProvider {
   import spark.implicits._
 
-  override val dfMap = Map(
+  val dfMap = Map(
     "customer" -> spark.read.parquet(inputDir + "/customer.parquet"),
 
     "lineitem" -> spark.read.parquet(inputDir + "/lineitem.parquet"),
@@ -24,14 +24,14 @@ class TpchParquetSchemaProvider(spark: SparkSession, inputDir: String) extends T
   )
 
   // for implicits
-  override val customer = dfMap.get("customer").get
-  override val lineitem = dfMap.get("lineitem").get
-  override val nation = dfMap.get("nation").get
-  override val region = dfMap.get("region").get
-  override val order = dfMap.get("order").get
-  override val part = dfMap.get("part").get
-  override val partsupp = dfMap.get("partsupp").get
-  override val supplier = dfMap.get("supplier").get
+  val customer = dfMap.get("customer").get
+  val lineitem = dfMap.get("lineitem").get
+  val nation = dfMap.get("nation").get
+  val region = dfMap.get("region").get
+  val order = dfMap.get("order").get
+  val part = dfMap.get("part").get
+  val partsupp = dfMap.get("partsupp").get
+  val supplier = dfMap.get("supplier").get
 
   dfMap.foreach {
     case (key, value) => value.createOrReplaceTempView(key)

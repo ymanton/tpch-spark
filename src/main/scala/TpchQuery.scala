@@ -97,7 +97,7 @@ object TpchQuery {
       .getOrCreate()
     val schemaProvider = sys.env.getOrElse("TPCH_INPUT_DATA_FORMAT", "text") match {
       case "parquet" => new TpchParquetSchemaProvider(spark, inputDataDir)
-      case "text" => new TpchSchemaProvider(spark, inputDataDir)
+      case "text" => new TpchTextSchemaProvider(spark, inputDataDir)
     }
 
     // execute queries

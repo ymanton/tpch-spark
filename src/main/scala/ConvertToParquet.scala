@@ -7,7 +7,7 @@ object ConvertToParquet {
     schemaProvider.customer.write.parquet(parquetOutputDir + "/customer.parquet")
     schemaProvider.lineitem.write.parquet(parquetOutputDir + "/lineitem.parquet")
     schemaProvider.nation.write.parquet(parquetOutputDir + "/nation.parquet")
-    schemaProvider.order.write.parquet(parquetOutputDir + "/order.parquet")
+    schemaProvider.order.write.parquet(parquetOutputDir + "/orders.parquet")
     schemaProvider.partsupp.write.parquet(parquetOutputDir + "/partsupp.parquet")
     schemaProvider.part.write.parquet(parquetOutputDir + "/part.parquet")
     schemaProvider.region.write.parquet(parquetOutputDir + "/region.parquet")
@@ -22,7 +22,7 @@ object ConvertToParquet {
       .builder
       .appName("Convert To Parquet tool")
       .getOrCreate()
-    val schemaProvider = new TpchSchemaProvider(spark, inputDataDir)
+    val schemaProvider = new TpchTextSchemaProvider(spark, inputDataDir)
     convert(spark, schemaProvider, parquetOutputDir)
     spark.close()
   }
