@@ -103,7 +103,7 @@ object TpchQuery {
       case "scala" => SCALA_QUERY
       case "sql" => SQL_QUERY
     }
-    val sqlDir = sys.env.getOrElse("TPCH_QUERY_SQL_SIR", cwd + "/src/sql")
+    val sqlDir = sys.env.getOrElse("TPCH_QUERY_SQL_SIR", cwd + "/src/sql") + "/"
 
     val spark = SparkSession
       .builder
