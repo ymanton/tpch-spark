@@ -14,7 +14,7 @@ class TpchParquetSchemaProvider(spark: SparkSession, inputDir: String) extends T
 
     "region" -> spark.read.parquet(inputDir + "/region.parquet"),
 
-    "order" -> spark.read.parquet(inputDir + "/orders.parquet"),
+    "orders" -> spark.read.parquet(inputDir + "/orders.parquet"),
 
     "part" -> spark.read.parquet(inputDir + "/part.parquet"),
 
@@ -28,7 +28,7 @@ class TpchParquetSchemaProvider(spark: SparkSession, inputDir: String) extends T
   val lineitem = dfMap.get("lineitem").get
   val nation = dfMap.get("nation").get
   val region = dfMap.get("region").get
-  val order = dfMap.get("order").get
+  val order = dfMap.get("orders").get
   val part = dfMap.get("part").get
   val partsupp = dfMap.get("partsupp").get
   val supplier = dfMap.get("supplier").get
