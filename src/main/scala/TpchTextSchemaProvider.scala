@@ -96,7 +96,7 @@ class TpchTextSchemaProvider(spark: SparkSession, inputDir: String) extends Tpch
     "region" -> spark.read.textFile(inputDir + "/region.tbl*").map(_.split('|')).map(p =>
       Region(p(0).trim.toLong, p(1).trim, p(2).trim)).toDF(),
 
-    "order" -> spark.read.textFile(inputDir + "/orders.tbl*").map(_.split('|')).map(p =>
+    "orders" -> spark.read.textFile(inputDir + "/orders.tbl*").map(_.split('|')).map(p =>
       Order(p(0).trim.toLong, p(1).trim.toLong, p(2).trim, p(3).trim.toDouble, p(4).trim, p(5).trim, p(6).trim, p(7).trim.toLong, p(8).trim)).toDF(),
 
     "part" -> spark.read.textFile(inputDir + "/part.tbl*").map(_.split('|')).map(p =>
@@ -114,7 +114,7 @@ class TpchTextSchemaProvider(spark: SparkSession, inputDir: String) extends Tpch
   val lineitem = dfMap.get("lineitem").get
   val nation = dfMap.get("nation").get
   val region = dfMap.get("region").get
-  val order = dfMap.get("order").get
+  val order = dfMap.get("orders").get
   val part = dfMap.get("part").get
   val partsupp = dfMap.get("partsupp").get
   val supplier = dfMap.get("supplier").get
