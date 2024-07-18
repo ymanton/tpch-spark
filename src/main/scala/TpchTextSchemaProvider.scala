@@ -14,8 +14,7 @@ class TpchTextSchemaProvider(spark: SparkSession, inputDir: String) extends Tpch
         StructField("c_phone", StringType) ::
         StructField("c_acctbal", DataTypes.createDecimalType(15, 2)) ::
         StructField("c_mktsegment", StringType) ::
-        StructField("c_comment", StringType) ::
-        StructField("c_null", StringType) :: Nil),
+        StructField("c_comment", StringType) :: Nil),
     "lineitem" -> StructType(
       StructField("l_orderkey", IntegerType) :: // primary key
         StructField("l_partkey", IntegerType) ::
@@ -32,14 +31,12 @@ class TpchTextSchemaProvider(spark: SparkSession, inputDir: String) extends Tpch
         StructField("l_receiptdate", DateType) ::
         StructField("l_shipinstruct", StringType) ::
         StructField("l_shipmode", StringType) ::
-        StructField("l_comment", StringType) ::
-        StructField("l_null", StringType) :: Nil),
+        StructField("l_comment", StringType) :: Nil),
     "nation" -> StructType(
       StructField("n_nationkey", IntegerType) :: // primary key
         StructField("n_name", StringType) ::
         StructField("n_regionkey", IntegerType) ::
-        StructField("n_comment", StringType) ::
-        StructField("n_null", StringType) :: Nil),
+        StructField("n_comment", StringType) :: Nil),
     "orders" -> StructType(
       StructField("o_orderkey", IntegerType) :: // primary key
         StructField("o_custkey", IntegerType) ::
@@ -49,8 +46,7 @@ class TpchTextSchemaProvider(spark: SparkSession, inputDir: String) extends Tpch
         StructField("o_orderpriority", StringType) ::
         StructField("o_clerk", StringType) ::
         StructField("o_shippriority", IntegerType) ::
-        StructField("o_comment", StringType) ::
-        StructField("o_null", StringType) :: Nil),
+        StructField("o_comment", StringType) :: Nil),
     "part" -> StructType(
       StructField("p_partkey", IntegerType) :: // primary key
         StructField("p_name", StringType) ::
@@ -60,20 +56,17 @@ class TpchTextSchemaProvider(spark: SparkSession, inputDir: String) extends Tpch
         StructField("p_size", IntegerType) ::
         StructField("p_container", StringType) ::
         StructField("p_retailprice", DataTypes.createDecimalType(15, 2)) ::
-        StructField("p_comment", StringType) ::
-        StructField("p_null", StringType) :: Nil),
+        StructField("p_comment", StringType) :: Nil),
     "partsupp" -> StructType(
       StructField("ps_partkey", IntegerType) :: // primary key
         StructField("ps_suppkey", IntegerType) :: // primary key
         StructField("ps_availqty", IntegerType) ::
         StructField("ps_supplycost", DataTypes.createDecimalType(15, 2)) ::
-        StructField("ps_comment", StringType) ::
-        StructField("ps_null", StringType) :: Nil),
+        StructField("ps_comment", StringType) :: Nil),
     "region" -> StructType(
       StructField("r_regionkey", IntegerType) :: // primary key
         StructField("r_name", StringType) ::
-        StructField("r_comment", StringType) ::
-        StructField("r_null", StringType) :: Nil),
+        StructField("r_comment", StringType) :: Nil),
     "supplier" -> StructType(
       StructField("s_suppkey", IntegerType) :: // primary key
         StructField("s_name", StringType) ::
@@ -81,8 +74,7 @@ class TpchTextSchemaProvider(spark: SparkSession, inputDir: String) extends Tpch
         StructField("s_nationkey", IntegerType) ::
         StructField("s_phone", StringType) ::
         StructField("s_acctbal", DataTypes.createDecimalType(15, 2)) ::
-        StructField("s_comment", StringType) ::
-        StructField("s_null", StringType) :: Nil)
+        StructField("s_comment", StringType) :: Nil)
   )
 
   private val dfMap = dfSchemaMap.map {
