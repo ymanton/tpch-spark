@@ -1,21 +1,21 @@
 package main.scala
 
 import org.apache.spark.sql.{DataFrame, SparkSession}
-import org.apache.spark.sql.types.{DataTypes, IntegerType, CharType, VarcharType, DateType, StructField, StructType}
+import org.apache.spark.sql.types.{DataTypes, IntegerType, StringType, DateType, StructField, StructType}
 
 class TpchTextSchemaProvider(spark: SparkSession, inputDir: String) extends TpchSchemaProvider {
   // TPC-H table schemas
   private val dfSchemaMap = Map(
     "customer" -> StructType(
       StructField("c_custkey", IntegerType) :: // primary key
-        StructField("c_name", VarcharType(25)) ::
-        StructField("c_address", VarcharType(40)) ::
+        StructField("c_name", StringType) ::
+        StructField("c_address", StringType) ::
         StructField("c_nationkey", IntegerType) ::
-        StructField("c_phone", CharType(15)) ::
+        StructField("c_phone", StringType) ::
         StructField("c_acctbal", DataTypes.createDecimalType(15, 2)) ::
-        StructField("c_mktsegment", CharType(10)) ::
-        StructField("c_comment", VarcharType(117)) ::
-        StructField("c_null", VarcharType(10)) :: Nil),
+        StructField("c_mktsegment", StringType) ::
+        StructField("c_comment", StringType) ::
+        StructField("c_null", StringType) :: Nil),
     "lineitem" -> StructType(
       StructField("l_orderkey", IntegerType) :: // primary key
         StructField("l_partkey", IntegerType) ::
@@ -25,64 +25,64 @@ class TpchTextSchemaProvider(spark: SparkSession, inputDir: String) extends Tpch
         StructField("l_extendedprice", DataTypes.createDecimalType(15, 2)) ::
         StructField("l_discount", DataTypes.createDecimalType(15, 2)) ::
         StructField("l_tax", DataTypes.createDecimalType(15, 2)) ::
-        StructField("l_returnflag", CharType(1)) ::
-        StructField("l_linestatus", CharType(1)) ::
+        StructField("l_returnflag", StringType) ::
+        StructField("l_linestatus", StringType) ::
         StructField("l_shipdate", DateType) ::
         StructField("l_commitdate", DateType) ::
         StructField("l_receiptdate", DateType) ::
-        StructField("l_shipinstruct", CharType(25)) ::
-        StructField("l_shipmode", CharType(10)) ::
-        StructField("l_comment", VarcharType(44)) ::
-        StructField("l_null", VarcharType(10)) :: Nil),
+        StructField("l_shipinstruct", StringType) ::
+        StructField("l_shipmode", StringType) ::
+        StructField("l_comment", StringType) ::
+        StructField("l_null", StringType) :: Nil),
     "nation" -> StructType(
       StructField("n_nationkey", IntegerType) :: // primary key
-        StructField("n_name", CharType(25)) ::
+        StructField("n_name", StringType) ::
         StructField("n_regionkey", IntegerType) ::
-        StructField("n_comment", VarcharType(152)) ::
-        StructField("n_null", VarcharType(10)) :: Nil),
+        StructField("n_comment", StringType) ::
+        StructField("n_null", StringType) :: Nil),
     "orders" -> StructType(
       StructField("o_orderkey", IntegerType) :: // primary key
         StructField("o_custkey", IntegerType) ::
-        StructField("o_orderstatus", CharType(1)) ::
+        StructField("o_orderstatus", StringType) ::
         StructField("o_totalprice", DataTypes.createDecimalType(15, 2)) ::
-        StructField("o_orderdate", CharType(15)) ::
-        StructField("o_orderpriority", CharType(15)) ::
-        StructField("o_clerk", CharType(15)) ::
+        StructField("o_orderdate", StringType) ::
+        StructField("o_orderpriority", StringType) ::
+        StructField("o_clerk", StringType) ::
         StructField("o_shippriority", IntegerType) ::
-        StructField("o_comment", VarcharType(79)) ::
-        StructField("o_null", VarcharType(10)) :: Nil),
+        StructField("o_comment", StringType) ::
+        StructField("o_null", StringType) :: Nil),
     "part" -> StructType(
       StructField("p_partkey", IntegerType) :: // primary key
-        StructField("p_name", VarcharType(55)) ::
-        StructField("p_mfgr", CharType(25)) ::
-        StructField("p_brand", CharType(10)) ::
-        StructField("p_type", VarcharType(25)) ::
+        StructField("p_name", StringType) ::
+        StructField("p_mfgr", StringType) ::
+        StructField("p_brand", StringType) ::
+        StructField("p_type", StringType) ::
         StructField("p_size", IntegerType) ::
-        StructField("p_container", CharType(10)) ::
+        StructField("p_container", StringType) ::
         StructField("p_retailprice", DataTypes.createDecimalType(15, 2)) ::
-        StructField("p_comment", VarcharType(23)) ::
-        StructField("p_null", VarcharType(10)) :: Nil),
+        StructField("p_comment", StringType) ::
+        StructField("p_null", StringType) :: Nil),
     "partsupp" -> StructType(
       StructField("ps_partkey", IntegerType) :: // primary key
         StructField("ps_suppkey", IntegerType) :: // primary key
         StructField("ps_availqty", IntegerType) ::
         StructField("ps_supplycost", DataTypes.createDecimalType(15, 2)) ::
-        StructField("ps_comment", VarcharType(199)) ::
-        StructField("ps_null", VarcharType(10)) :: Nil),
+        StructField("ps_comment", StringType) ::
+        StructField("ps_null", StringType) :: Nil),
     "region" -> StructType(
       StructField("r_regionkey", IntegerType) :: // primary key
-        StructField("r_name", CharType(10)) ::
-        StructField("r_comment", VarcharType(152)) ::
-        StructField("r_null", VarcharType(10)) :: Nil),
+        StructField("r_name", StringType) ::
+        StructField("r_comment", StringType) ::
+        StructField("r_null", StringType) :: Nil),
     "supplier" -> StructType(
       StructField("s_suppkey", IntegerType) :: // primary key
-        StructField("s_name", CharType(25)) ::
-        StructField("s_address", VarcharType(40)) ::
+        StructField("s_name", StringType) ::
+        StructField("s_address", StringType) ::
         StructField("s_nationkey", IntegerType) ::
-        StructField("s_phone", CharType(15)) ::
+        StructField("s_phone", StringType) ::
         StructField("s_acctbal", DataTypes.createDecimalType(15, 2)) ::
-        StructField("s_comment", VarcharType(101)) ::
-        StructField("s_null", VarcharType(10)) :: Nil)
+        StructField("s_comment", StringType) ::
+        StructField("s_null", StringType) :: Nil)
   )
 
   private val dfMap = dfSchemaMap.map {
