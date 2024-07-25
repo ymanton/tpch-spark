@@ -34,6 +34,10 @@ class TpchParquetSchemaProvider(spark: SparkSession, inputDir: String) extends T
   val supplier = dfMap.get("supplier").get
 
   dfMap.foreach {
+    case (key, value) => value.show()
+  }
+
+  dfMap.foreach {
     case (key, value) => value.createOrReplaceTempView(key)
   }
 }

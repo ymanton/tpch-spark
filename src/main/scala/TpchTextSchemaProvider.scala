@@ -92,6 +92,10 @@ class TpchTextSchemaProvider(spark: SparkSession, inputDir: String) extends Tpch
   val supplier: DataFrame = dfMap("supplier")
 
   dfMap.foreach {
+    case (key, value) => value.show()
+  }
+
+  dfMap.foreach {
     case (key, value) => value.createOrReplaceTempView(key)
   }
 }
