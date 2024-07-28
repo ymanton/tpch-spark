@@ -65,6 +65,7 @@ object TpchQuery {
           case SCALA_QUERY => Class.forName(query_name).newInstance.asInstanceOf[TpchQuery]
           case SQL_QUERY => new SqlQuery(sqlDir + query_name)
         }
+        spark.sparkContext.setJobDescription(query.getName())
         val queryOutput = query.execute(spark, schemaProvider)
         outputDF(queryOutput, queryOutputDir, query.getName())
 
