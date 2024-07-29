@@ -77,8 +77,13 @@ class TpchTextSchemaProvider(spark: SparkSession, inputDir: String) extends Tpch
         StructField("s_comment", StringType) :: Nil)
   )
 
-  private val dfMap = dfSchemaMap.map {
-    case (name, schema) => (name, spark.read.schema(schema).option("delimiter", "|").csv(inputDir + s"/$name.tbl*"))
+  private var dfMap = Map[String, DataFrame]()
+  
+  for (t <- tables) {
+    spark.sparkContext.setJobDescription(s"$t.tbl*")
+    val df = spark.read.schema(dfSchemaMap(t)).option("delimiter", "|").csv(s"$inputDir/$t.tbl*")
+    df.createOrReplaceTempView(t)
+    dfMap += (t -> df)
   }
 
   // for implicits
@@ -90,8 +95,4 @@ class TpchTextSchemaProvider(spark: SparkSession, inputDir: String) extends Tpch
   val part: DataFrame = dfMap("part")
   val partsupp: DataFrame = dfMap("partsupp")
   val supplier: DataFrame = dfMap("supplier")
-
-  dfMap.foreach {
-    case (key, value) => value.createOrReplaceTempView(key)
-  }
 }

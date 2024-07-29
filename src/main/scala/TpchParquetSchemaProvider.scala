@@ -1,27 +1,18 @@
 package main.scala
 
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 class TpchParquetSchemaProvider(spark: SparkSession, inputDir: String) extends TpchSchemaProvider {
   import spark.implicits._
 
-  val dfMap = Map(
-    "customer" -> spark.read.parquet(inputDir + "/customer.parquet"),
+  private var dfMap = Map[String, DataFrame]()
 
-    "lineitem" -> spark.read.parquet(inputDir + "/lineitem.parquet"),
-
-    "nation" -> spark.read.parquet(inputDir + "/nation.parquet"),
-
-    "region" -> spark.read.parquet(inputDir + "/region.parquet"),
-
-    "orders" -> spark.read.parquet(inputDir + "/orders.parquet"),
-
-    "part" -> spark.read.parquet(inputDir + "/part.parquet"),
-
-    "partsupp" -> spark.read.parquet(inputDir + "/partsupp.parquet"),
-
-    "supplier" -> spark.read.parquet(inputDir + "/supplier.parquet")
-  )
+  for (t <- tables) {
+    spark.sparkContext.setJobDescription(s"$t.parquet")
+    val df = spark.read.parquet(s"$inputDir/$t.parquet")
+    df.createOrReplaceTempView(t)
+    dfMap += (t -> df)
+  }
 
   // for implicits
   val customer = dfMap.get("customer").get
@@ -32,8 +23,4 @@ class TpchParquetSchemaProvider(spark: SparkSession, inputDir: String) extends T
   val part = dfMap.get("part").get
   val partsupp = dfMap.get("partsupp").get
   val supplier = dfMap.get("supplier").get
-
-  dfMap.foreach {
-    case (key, value) => value.createOrReplaceTempView(key)
-  }
 }
