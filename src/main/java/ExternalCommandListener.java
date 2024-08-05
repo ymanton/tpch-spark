@@ -12,6 +12,7 @@ public class ExternalCommandListener extends SparkListener {
 
     public ExternalCommandListener(SparkConf conf) {
         pb = new ProcessBuilder(System.getenv().getOrDefault("TPCH_SPARK_LISTENER_COMMAND", "/usr/bin/false"), null);
+        pb.inheritIO();
     }
 
     @Override
