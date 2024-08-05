@@ -1,9 +1,9 @@
 package main.java;
 
+import org.apache.spark.SparkConf;
 import org.apache.spark.scheduler.SparkListener;
 import org.apache.spark.scheduler.SparkListenerJobStart;
 import org.apache.spark.scheduler.SparkListenerJobEnd;
-import org.apache.spark.SparkConf;
 import java.lang.ProcessBuilder;
 import java.io.IOException;
 
@@ -11,7 +11,7 @@ public class ExternalCommandListener extends SparkListener {
     private ProcessBuilder pb;
 
     public ExternalCommandListener(SparkConf conf) {
-        pb = new ProcessBuilder(conf.get("spark-tpch.listener.command", "/usr/bin/false"), null);
+        pb = new ProcessBuilder(System.getenv().getOrDefault("TPCH_SPARK_LISTENER_COMMAND", "/usr/bin/false"), null);
     }
 
     @Override
