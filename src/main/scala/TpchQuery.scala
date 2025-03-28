@@ -42,7 +42,6 @@ object TpchQuery {
   def executeQueries(spark: SparkSession, schemaProvider: TpchSchemaProvider, queryImpl: Int, queries: Seq[Int], sqlDir: String, queryOutputDir: String): ListBuffer[(String, Float)] = {
     val executionTimes = new ListBuffer[(String, Float)]
     for (queryNo <- queries) {
-      val startTime = System.nanoTime()
       val query_name = queryImpl match {
         case SCALA_QUERY => f"main.scala.Q${queryNo}%02d"
         case SQL_QUERY => f"Q${queryNo}%02d.sql"
@@ -56,12 +55,16 @@ object TpchQuery {
           case SQL_QUERY => new SqlQuery(sqlDir + query_name)
         }
         spark.sparkContext.setJobDescription(query.getName())
+        println(f"Starting ${query.getName()}%s\n")
+
+        val startTime = System.nanoTime()
         val queryOutput = query.execute(spark, schemaProvider)
         outputDF(queryOutput, queryOutputDir, query.getName())
-
         val endTime = System.nanoTime()
+
         val elapsed = (endTime - startTime) / 1000000000.0f // to seconds
         executionTimes += new Tuple2(query.getName(), elapsed)
+        println(f"Finished ${query.getName()}%s in ${elapsed}%1.8fs\n")
       }
       catch {
         case e: Exception => log.warn(f"Failed to execute query ${query_name}: ${e}")
