@@ -55,7 +55,7 @@ object TpchQuery {
           case SQL_QUERY => new SqlQuery(sqlDir + query_name)
         }
         spark.sparkContext.setJobDescription(query.getName())
-        println(f"Starting ${query.getName()}%s\n")
+        println(f"Starting ${query.getName()}%s")
 
         val startTime = System.nanoTime()
         val queryOutput = query.execute(spark, schemaProvider)
@@ -64,7 +64,7 @@ object TpchQuery {
 
         val elapsed = (endTime - startTime) / 1000000000.0f // to seconds
         executionTimes += new Tuple2(query.getName(), elapsed)
-        println(f"Finished ${query.getName()}%s in ${elapsed}%1.8fs\n")
+        println(f"Finished ${query.getName()}%s in ${elapsed}%1.8f s")
       }
       catch {
         case e: Exception => log.warn(f"Failed to execute query ${query_name}: ${e}")
