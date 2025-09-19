@@ -3,7 +3,7 @@ package main.scala
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.types.{DataTypes, IntegerType, StringType, DateType, StructField, StructType}
 
-class TpchTextSchemaProvider(spark: SparkSession, inputDir: String) extends TpchSchemaProvider {
+class TpchTextSchemaProvider(spark: SparkSession, inputDir: String, dataSuffix: String) extends TpchSchemaProvider {
   // TPC-H table schemas
   private val dfSchemaMap = Map(
     "customer" -> StructType(
@@ -80,8 +80,8 @@ class TpchTextSchemaProvider(spark: SparkSession, inputDir: String) extends Tpch
   private var dfMap = Map[String, DataFrame]()
   
   for (t <- tables) {
-    spark.sparkContext.setJobDescription(s"$t.tbl*")
-    val df = spark.read.schema(dfSchemaMap(t)).option("delimiter", "|").csv(s"$inputDir/$t.tbl*")
+    spark.sparkContext.setJobDescription(s"$t$dataSuffix*")
+    val df = spark.read.schema(dfSchemaMap(t)).option("delimiter", "|").csv(s"$inputDir/$t$dataSuffix*")
     df.createOrReplaceTempView(t)
     dfMap += (t -> df)
   }

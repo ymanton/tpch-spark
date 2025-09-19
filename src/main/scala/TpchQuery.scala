@@ -92,9 +92,10 @@ object TpchQuery {
       .builder
       .appName("TPC-H v3.0.0 Spark")
       .getOrCreate()
+    val dataSuffixEnvVar = "TPCH_INPUT_DATA_SUFFIX"
     val schemaProvider = sys.env.getOrElse("TPCH_INPUT_DATA_FORMAT", "text") match {
-      case "parquet" => new TpchParquetSchemaProvider(spark, inputDataDir)
-      case "text" => new TpchTextSchemaProvider(spark, inputDataDir)
+      case "parquet" => new TpchParquetSchemaProvider(spark, inputDataDir, sys.env.getOrElse(dataSuffixEnvVar, ".parquet"))
+      case "text" => new TpchTextSchemaProvider(spark, inputDataDir, sys.env.getOrElse(dataSuffixEnvVar, ".tbl"))
     }
 
     // execute queries

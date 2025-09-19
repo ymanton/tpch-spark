@@ -2,14 +2,14 @@ package main.scala
 
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
-class TpchParquetSchemaProvider(spark: SparkSession, inputDir: String) extends TpchSchemaProvider {
+class TpchParquetSchemaProvider(spark: SparkSession, inputDir: String, dataSuffix: String) extends TpchSchemaProvider {
   import spark.implicits._
 
   private var dfMap = Map[String, DataFrame]()
 
   for (t <- tables) {
-    spark.sparkContext.setJobDescription(s"$t.parquet")
-    val df = spark.read.parquet(s"$inputDir/$t.parquet")
+    spark.sparkContext.setJobDescription(s"$t$dataSuffix")
+    val df = spark.read.parquet(s"$inputDir/$t$dataSuffix")
     df.createOrReplaceTempView(t)
     dfMap += (t -> df)
   }
