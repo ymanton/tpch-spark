@@ -73,7 +73,7 @@ object TpchQuery {
     val inputDataDir = sys.env.getOrElse("TPCH_INPUT_DATA_DIR", "file://" + cwd + "/dbgen")
     val queryOutputDir = sys.env.getOrElse("TPCH_QUERY_OUTPUT_DIR", inputDataDir + "/output")
     val executionTimesPath = sys.env.getOrElse("TPCH_EXECUTION_TIMES", cwd + "/tpch_execution_times.txt")
-    val sqlDir = sys.env.getOrElse("TPCH_QUERY_SQL_DIR", cwd + "/src/sql") + "/"
+    val sqlDir = sys.env.getOrElse("TPCH_QUERY_SQL_DIR", cwd + "/src/sql/tpch") + "/"
 
     val spark = SparkSession
       .builder
