@@ -27,9 +27,6 @@ abstract class TpchQuery {
 
 object TpchQuery {
 
-  val SCALA_QUERY = 0
-  val SQL_QUERY = 1
-
   def outputDF(df: DataFrame, outputDir: String, className: String): Unit = {
     if (outputDir == null || outputDir == "")
       df.collect().foreach(println)
@@ -39,21 +36,15 @@ object TpchQuery {
     }
   }
 
-  def executeQueries(spark: SparkSession, schemaProvider: TpchSchemaProvider, queryImpl: Int, queries: Seq[Int], sqlDir: String, queryOutputDir: String): ListBuffer[(String, Float)] = {
+  def executeQueries(spark: SparkSession, schemaProvider: TpchSchemaProvider, queries: Seq[Int], sqlDir: String, queryOutputDir: String): ListBuffer[(String, Float)] = {
     val executionTimes = new ListBuffer[(String, Float)]
     for (queryNo <- queries) {
-      val query_name = queryImpl match {
-        case SCALA_QUERY => f"main.scala.Q${queryNo}%02d"
-        case SQL_QUERY => f"Q${queryNo}%02d.sql"
-      }
+      val query_name = f"Q${queryNo}%02d.sql"
 
       val log = LogManager.getRootLogger
 
       try {
-        val query = queryImpl match {
-          case SCALA_QUERY => Class.forName(query_name).newInstance.asInstanceOf[TpchQuery]
-          case SQL_QUERY => new SqlQuery(sqlDir + query_name)
-        }
+        val query = new SqlQuery(sqlDir + query_name)
         spark.sparkContext.setJobDescription(query.getName())
         println(f"Starting ${query.getName()}%s")
 
@@ -82,10 +73,6 @@ object TpchQuery {
     val inputDataDir = sys.env.getOrElse("TPCH_INPUT_DATA_DIR", "file://" + cwd + "/dbgen")
     val queryOutputDir = sys.env.getOrElse("TPCH_QUERY_OUTPUT_DIR", inputDataDir + "/output")
     val executionTimesPath = sys.env.getOrElse("TPCH_EXECUTION_TIMES", cwd + "/tpch_execution_times.txt")
-    val queryImpl = sys.env.getOrElse("TPCH_QUERY_IMPL", "scala").toLowerCase match {
-      case "scala" => SCALA_QUERY
-      case "sql" => SQL_QUERY
-    }
     val sqlDir = sys.env.getOrElse("TPCH_QUERY_SQL_DIR", cwd + "/src/sql") + "/"
 
     val spark = SparkSession
@@ -99,7 +86,7 @@ object TpchQuery {
     }
 
     // execute queries
-    val executionTimes = executeQueries(spark, schemaProvider, queryImpl, queries, sqlDir, queryOutputDir)
+    val executionTimes = executeQueries(spark, schemaProvider, queries, sqlDir, queryOutputDir)
     spark.close()
 
     // write execution times to file
