@@ -39,7 +39,7 @@ object TpcdsQuery {
   def executeQueries(spark: SparkSession, schemaProvider: TpcdsSchemaProvider, queries: Seq[Int], sqlDir: String, queryOutputDir: String): ListBuffer[(String, Float)] = {
     val executionTimes = new ListBuffer[(String, Float)]
     for (queryNo <- queries) {
-      val query_name = f"query${queryNo}%d.sql"
+      val query_name = f"q${queryNo}%d.sql"
 
       val log = LogManager.getRootLogger
 
