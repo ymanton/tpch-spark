@@ -1,9 +1,12 @@
 # tpch-spark
 
-TPC-H queries implemented in Spark using SQL.
+TPC-H and TPC-DS queries implemented in Spark using SQL.
 
 > The TPC-H is a decision support benchmark. It consists of a suite of business oriented ad-hoc queries and concurrent data modifications. The queries and the data populating the database have been chosen to have broad industry-wide relevance. This benchmark illustrates decision support systems that examine large volumes of data, execute queries with a high degree of complexity, and give answers to critical business questions.
 — https://www.tpc.org/tpch
+
+> The TPC-DS is a decision support benchmark that models several generally applicable aspects of a decision support system, including queries and data maintenance. The benchmark provides a representative evaluation of performance as a general purpose decision support system.
+— https://www.tpc.org/tpcds
 
 
 ---
@@ -94,9 +97,9 @@ $ cat region.tbl
 You can find the schemas of the generated tables in the [TPC-H specification](./tpch-v3.0.0-specification.pdf)
 
 
-### C. Build `tpch-spark`
+### C. Build the application
 
-`tpch-spark` is written in Scala as a [self-contained Spark application](https://spark.apache.org/docs/latest/quick-start.html#self-contained-applications). The TPC-H queries are implemented as SQL files in the `src/sql/tpch` directory.
+The application is written in Scala as a [self-contained Spark application](https://spark.apache.org/docs/latest/quick-start.html#self-contained-applications). The TPC-H queries are implemented as SQL files in the `src/sql/tpch` directory, and TPC-DS queries can be placed in the `src/sql/tpcds` directory.
 
 Use the provided `sbt` file to build `tpch-spark` as a spark application.
 
@@ -107,7 +110,7 @@ sbt package
 
 The above command will package the application into a jar file, e.g., `./target/scala-2.12/spark-tpc-h-queries_2.12-1.0.jar` which you will be needing in the next step.
 
-### D. Run `tpch-spark`
+### D. Run TPC-H queries
 
 You can run all TPC-H queries from Q01 to Q22 by running:
 
@@ -140,9 +143,70 @@ export TPCH_EXECUTION_TIMES="$HOME/tpch-times.txt"
 
 ---
 
+## Running TPC-DS Queries
+
+### Prerequisites
+
+1. **Generate TPC-DS data**: Use the TPC-DS data generator (dsdgen) to generate the benchmark data. You can obtain it from http://www.tpc.org/tpcds/
+2. **Fill in table schemas**: Update `src/main/scala/TpcdsTextSchemaProvider.scala` with the actual TPC-DS table schemas based on the TPC-DS specification
+3. **Add SQL queries**: Place your TPC-DS SQL query files in the `src/sql/tpcds` directory, named as `query1.sql`, `query2.sql`, ..., `query99.sql`
+
+### Running TPC-DS
+
+After building the application with `sbt package`, you can run TPC-DS queries:
+
+```bash
+# Run all TPC-DS queries (query1 to query99)
+spark-submit --class "main.scala.TpcdsQuery" target/scala-2.12/spark-tpc-h-queries_2.12-1.0.jar
+
+# Run specific queries
+spark-submit --class "main.scala.TpcdsQuery" target/scala-2.12/spark-tpc-h-queries_2.12-1.0.jar 1 5 10
+```
+
+### TPC-DS Environment Variables
+
+- `TPCDS_INPUT_DATA_DIR`: Location of TPC-DS data files (default: `<current working directory>/tpcds-data`)
+- `TPCDS_INPUT_DATA_FORMAT`: Format of input data - "text" or "parquet" (default: "text")
+- `TPCDS_INPUT_DATA_SUFFIX`: File suffix for data files (default: ".dat" for text, ".parquet" for parquet)
+- `TPCDS_QUERY_SQL_DIR`: Location of SQL query files (default: `<current working directory>/src/sql/tpcds`)
+- `TPCDS_QUERY_OUTPUT_DIR`: Location for query results (default: `${TPCDS_INPUT_DATA_DIR}/output`)
+- `TPCDS_EXECUTION_TIMES`: File path for execution times log (default: `<current working directory>/tpcds_execution_times.txt`)
+
+Example:
+
+```bash
+export TPCDS_INPUT_DATA_DIR="$HOME/tpcds-data"
+export TPCDS_QUERY_SQL_DIR="$HOME/tpcds-sql"
+export TPCDS_QUERY_OUTPUT_DIR="$HOME/tpcds-results"
+export TPCDS_EXECUTION_TIMES="$HOME/tpcds-times.txt"
+```
+
+---
+
+## Project Structure
+
+```
+src/sql/
+├── tpch/          # TPC-H SQL queries (Q01.sql - Q22.sql)
+└── tpcds/         # TPC-DS SQL queries (query1.sql - query99.sql)
+
+src/main/scala/
+├── TpchQuery.scala                  # TPC-H main driver
+├── TpcdsQuery.scala                 # TPC-DS main driver
+├── SqlQuery.scala                   # SQL query executors
+├── TpchSchemaProvider.scala         # TPC-H schema trait
+├── TpchTextSchemaProvider.scala     # TPC-H text data loader
+├── TpchParquetSchemaProvider.scala  # TPC-H parquet data loader
+├── TpcdsSchemaProvider.scala        # TPC-DS schema trait
+├── TpcdsTextSchemaProvider.scala    # TPC-DS text data loader (schemas need to be filled in)
+└── TpcdsParquetSchemaProvider.scala # TPC-DS parquet data loader
+```
+
+---
 
 ## Other Implementations
 
-1. Data generator (http://www.tpc.org/tpch/)
-2. TPC-H for Hive (https://issues.apache.org/jira/browse/hive-600)
-3. TPC-H for PIG (https://github.com/ssavvides/tpch-pig)
+1. TPC-H Data generator (http://www.tpc.org/tpch/)
+2. TPC-DS Data generator (http://www.tpc.org/tpcds/)
+3. TPC-H for Hive (https://issues.apache.org/jira/browse/hive-600)
+4. TPC-H for PIG (https://github.com/ssavvides/tpch-pig)

@@ -6,6 +6,9 @@ import org.apache.spark.sql.functions._
 import java.nio.file.Files
 import java.nio.file.Paths
 
+/**
+ * SQL query implementation for TPC-H benchmark.
+ */
 class SqlQuery(val sqlFilePath: String) extends TpchQuery {
 
   val sqlPath = Paths.get(sqlFilePath)
@@ -13,6 +16,25 @@ class SqlQuery(val sqlFilePath: String) extends TpchQuery {
   val sqlText = new String(Files.readAllBytes(Paths.get(sqlFilePath)))
 
   override def execute(spark: SparkSession, schemaProvider: TpchSchemaProvider): DataFrame = {
+    import spark.implicits._
+    import schemaProvider._
+
+    spark.sql(sqlText)
+  }
+
+  override def getName(): String = queryName
+}
+
+/**
+ * SQL query implementation for TPC-DS benchmark.
+ */
+class TpcdsSqlQuery(val sqlFilePath: String) extends TpcdsQuery {
+
+  val sqlPath = Paths.get(sqlFilePath)
+  val queryName = sqlPath.getFileName().toString()
+  val sqlText = new String(Files.readAllBytes(Paths.get(sqlFilePath)))
+
+  override def execute(spark: SparkSession, schemaProvider: TpcdsSchemaProvider): DataFrame = {
     import spark.implicits._
     import schemaProvider._
 
