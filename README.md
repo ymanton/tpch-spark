@@ -99,7 +99,7 @@ You can find the schemas of the generated tables in the [TPC-H specification](./
 
 ### C. Build the application
 
-The application is written in Scala as a [self-contained Spark application](https://spark.apache.org/docs/latest/quick-start.html#self-contained-applications). The TPC-H queries are implemented as SQL files in the `src/sql/tpch` directory, and TPC-DS queries can be placed in the `src/sql/tpcds` directory.
+The application is written in Scala as a [self-contained Spark application](https://spark.apache.org/docs/latest/quick-start.html#self-contained-applications). The TPC-H queries are implemented as SQL files in the `src/sql/tpch` directory and the TPC-DS queries in the `src/sql/tpcds` directory.
 
 Use the provided `sbt` file to build `tpch-spark` as a spark application.
 
@@ -144,12 +144,6 @@ export TPCH_EXECUTION_TIMES="$HOME/tpch-times.txt"
 ---
 
 ## Running TPC-DS Queries
-
-### Prerequisites
-
-1. **Generate TPC-DS data**: Use the TPC-DS data generator (dsdgen) to generate the benchmark data. You can obtain it from http://www.tpc.org/tpcds/
-2. **Fill in table schemas**: Update `src/main/scala/TpcdsTextSchemaProvider.scala` with the actual TPC-DS table schemas based on the TPC-DS specification
-3. **Add SQL queries**: Place your TPC-DS SQL query files in the `src/sql/tpcds` directory, named as `query1.sql`, `query2.sql`, ..., `query99.sql`
 
 ### Running TPC-DS
 
@@ -198,7 +192,7 @@ src/main/scala/
 ├── TpchTextSchemaProvider.scala     # TPC-H text data loader
 ├── TpchParquetSchemaProvider.scala  # TPC-H parquet data loader
 ├── TpcdsSchemaProvider.scala        # TPC-DS schema trait
-├── TpcdsTextSchemaProvider.scala    # TPC-DS text data loader (schemas need to be filled in)
+├── TpcdsTextSchemaProvider.scala    # TPC-DS text data loader
 └── TpcdsParquetSchemaProvider.scala # TPC-DS parquet data loader
 ```
 
